@@ -1,26 +1,259 @@
 @import "tailwindcss";
 
+@theme {
+  --color-primary: #00ff41;
+  --color-primary-dim: #00e639;
+  --color-primary-container: #00ff41;
+  --color-on-primary: #003907;
+
+  --color-secondary: #00daf3;
+  --color-secondary-dim: #00b8cc;
+  --color-secondary-container: #00daf3;
+  --color-on-secondary: #00363d;
+
+  --color-accent: #ffabf3;
+  --color-accent-container: #ffcef4;
+  --color-on-accent: #5b005b;
+
+  --color-background: #0e0e0f;
+  --color-surface: #131314;
+  --color-surface-container: #1f1f20;
+  --color-surface-container-low: #1b1b1c;
+  --color-surface-container-lowest: #0e0e0f;
+  --color-surface-container-high: #2a2a2b;
+  --color-surface-container-highest: #353436;
+
+  --color-on-surface: #e5e2e3;
+  --color-on-surface-variant: #b9ccb2;
+  --color-outline: #84967e;
+  --color-outline-variant: #3b4b37;
+
+  --font-headline: var(--font-space-mono);
+  --font-body: var(--font-jetbrains-mono);
+  --font-label: var(--font-courier-prime);
+}
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --background: #0e0e0f;
+  --foreground: #e5e2e3;
 }
 
 body {
-  background: var(--background);
+  background-color: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-body);
+  image-rendering: pixelated;
+  overflow-x: hidden;
+  cursor: crosshair;
 }
+
+/* scanlines CRT overlay */
+.scanlines {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: linear-gradient(
+    rgba(18, 16, 16, 0) 50%,
+    rgba(0, 0, 0, 0.15) 50%
+  ), linear-gradient(
+    90deg,
+    rgba(255, 0, 0, 0.03),
+    rgba(0, 255, 0, 0.01),
+    rgba(0, 0, 255, 0.03)
+  );
+  background-size: 100% 4px, 3px 100%;
+  pointer-events: none;
+  z-index: 9999;
+}
+
+/* CRT Screen Flicker */
+@keyframes flicker {
+  0% { opacity: 0.985; }
+  50% { opacity: 1; }
+  100% { opacity: 0.99; }
+}
+
+.crt-flicker {
+  animation: flicker 0.15s infinite;
+}
+
+/* CRT monitor screen curve overlay */
+.crt-screen {
+  position: relative;
+  min-height: 100vh;
+}
+.crt-screen::before {
+  content: " ";
+  display: block;
+  position: fixed;
+  top: 0; left: 0; bottom: 0; right: 0;
+  background: radial-gradient(circle, transparent 65%, rgba(0, 0, 0, 0.45) 100%);
+  z-index: 9998;
+  pointer-events: none;
+}
+
+/* Blinking Cursor */
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+.cursor-blink {
+  animation: blink 1s step-end infinite;
+  display: inline-block;
+  width: 10px;
+  height: 1.2em;
+  background-color: #00ff41;
+  vertical-align: middle;
+}
+
+/* Dither Shadows and patterns */
+.dither-shadow {
+  box-shadow: 8px 8px 0px 0px #000;
+  position: relative;
+}
+.dither-shadow::after {
+  content: "";
+  position: absolute;
+  top: 8px; left: 8px; right: -8px; bottom: -8px;
+  background-image: radial-gradient(#000000 25%, transparent 25%);
+  background-size: 2px 2px;
+  z-index: -1;
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+/* Dither Background */
+.dither-bg {
+  background-image: 
+    radial-gradient(circle, transparent 20%, #0e0e0f 20%, #0e0e0f 80%, transparent 80%, transparent),
+    radial-gradient(circle, transparent 20%, #0e0e0f 20%, #0e0e0f 80%, transparent 80%, transparent);
+  background-size: 8px 8px;
+  background-position: 0 0, 4px 4px;
+  opacity: 0.15;
+}
+
+/* Pixel Border - boxy outline */
+.pixel-border {
+  border: 4px solid #3b4b37;
+  position: relative;
+}
+
+.pixel-border-primary {
+  border: 4px solid #00ff41;
+  position: relative;
+}
+
+/* Chunky mechanical button press */
+.chunky-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 4px solid #3b4b37;
+  background-color: #131314;
+  color: #e5e2e3;
+  padding: 8px 16px;
+  font-family: var(--font-label);
+  font-weight: bold;
+  position: relative;
+  transition: transform 0.05s steps(2);
+  cursor: pointer;
+  user-select: none;
+}
+.chunky-button:hover {
+  background-color: #353436;
+  border-color: #00ff41;
+  color: #00ff41;
+}
+.chunky-button:active {
+  transform: translate(4px, 4px);
+}
+.chunky-button::after {
+  content: '';
+  position: absolute;
+  top: 4px; left: 4px;
+  width: 100%; height: 100%;
+  border: 2px solid #3b4b37;
+  z-index: -1;
+}
+.chunky-button:hover::after {
+  border-color: #00ff41;
+}
+
+.chunky-button-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 4px solid #00ff41;
+  background-color: #00ff41;
+  color: #003907;
+  padding: 8px 16px;
+  font-family: var(--font-label);
+  font-weight: bold;
+  position: relative;
+  transition: transform 0.05s steps(2);
+  cursor: pointer;
+  user-select: none;
+}
+.chunky-button-primary:hover {
+  background-color: #00e639;
+  border-color: #00e639;
+}
+.chunky-button-primary:active {
+  transform: translate(4px, 4px);
+}
+.chunky-button-primary::after {
+  content: '';
+  position: absolute;
+  top: 4px; left: 4px;
+  width: 100%; height: 100%;
+  border: 2px solid #003907;
+  z-index: -1;
+}
+
+/* CRT Glow text */
+.crt-glow {
+  text-shadow: 0 0 5px rgba(0, 255, 65, 0.8);
+}
+.crt-glow-cyan {
+  text-shadow: 0 0 5px rgba(0, 218, 243, 0.8);
+}
+
+/* Custom retro scrollbar */
+::-webkit-scrollbar {
+  width: 12px;
+  height: 12px;
+}
+::-webkit-scrollbar-track {
+  background: #131314;
+  border-left: 4px solid #3b4b37;
+}
+::-webkit-scrollbar-thumb {
+  background: #00ff41;
+  border: 2px solid #131314;
+}
+
+/* Color overrides for amber theme */
+.theme-amber {
+  --color-primary: #ffb000;
+  --color-primary-dim: #d49e00;
+  --color-primary-container: #ffb000;
+  --color-on-primary: #3a2200;
+  --color-on-surface-variant: #e0cca3;
+  --color-outline: #968c7e;
+  --color-outline-variant: #4b4437;
+}
+.theme-amber .cursor-blink {
+  background-color: #ffb000 !important;
+}
+.theme-amber .skill-block {
+  background-color: #ffb000 !important;
+}
+.theme-amber .crt-glow {
+  text-shadow: 0 0 5px rgba(255, 176, 0, 0.8) !important;
+}
+.theme-amber ::-webkit-scrollbar-thumb {
+  background: #ffb000 !important;
+}
+

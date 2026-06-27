@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>COMMUNICATION_TERMINAL_V1.0</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&amp;family=Courier+Prime:wght@400;700&amp;family=JetBrains+Mono:wght@400;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+        .cursor-blink {
+            display: inline-block;
+            width: 10px;
+            height: 1.2em;
+            background-color: #00ff41;
+            vertical-align: middle;
+            animation: blink 1s step-end infinite;
+        }
+        .scanlines {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.1) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.02), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.02));
+            background-size: 100% 4px, 3px 100%;
+            pointer-events: none;
+            z-index: 100;
+        }
+        .dither-shadow {
+            box-shadow: 8px 8px 0px 0px rgba(0, 0, 0, 1);
+            position: relative;
+        }
+        .dither-shadow::after {
+            content: '';
+            position: absolute;
+            top: 8px;
+            left: 8px;
+            right: -8px;
+            bottom: -8px;
+            background-image: radial-gradient(#3b4b37 1px, transparent 1px);
+            background-size: 2px 2px;
+            z-index: -1;
+        }
+        .crt-glow {
+            text-shadow: 0 0 5px rgba(0, 255, 65, 0.5);
+        }
+        .pixel-border {
+            border: 4px solid #3b4b37;
+            position: relative;
+        }
+        .terminal-input:focus {
+            outline: none;
+            border-bottom: 2px solid #00ff41;
+        }
+        body {
+            background-color: #131314;
+            background-image: radial-gradient(#1f1f20 1px, transparent 1px);
+            background-size: 16px 16px;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "on-primary-fixed-variant": "#00530e",
+                      "on-surface-variant": "#b9ccb2",
+                      "surface": "#131314",
+                      "background": "#131314",
+                      "surface-container-highest": "#353436",
+                      "primary": "#ebffe2",
+                      "secondary": "#bdf4ff",
+                      "primary-container": "#00ff41",
+                      "on-secondary-fixed-variant": "#004f58",
+                      "on-error-container": "#ffdad6",
+                      "primary-fixed-dim": "#00e639",
+                      "on-tertiary-fixed": "#380038",
+                      "surface-container-low": "#1b1b1c",
+                      "secondary-fixed": "#9cf0ff",
+                      "inverse-surface": "#e5e2e3",
+                      "on-secondary": "#00363d",
+                      "outline": "#84967e",
+                      "on-secondary-container": "#00616d",
+                      "on-secondary-fixed": "#001f24",
+                      "surface-container-lowest": "#0e0e0f",
+                      "surface-container-high": "#2a2a2b",
+                      "surface-tint": "#00e639",
+                      "surface-container": "#1f1f20",
+                      "tertiary-container": "#ffcef4",
+                      "surface-dim": "#131314",
+                      "secondary-fixed-dim": "#00daf3",
+                      "on-error": "#690005",
+                      "surface-bright": "#39393a",
+                      "on-primary": "#003907",
+                      "inverse-on-surface": "#303031",
+                      "on-tertiary": "#5b005b",
+                      "on-tertiary-container": "#ad00ad",
+                      "error": "#ffb4ab",
+                      "on-tertiary-fixed-variant": "#810081",
+                      "secondary-container": "#00e3fd",
+                      "inverse-primary": "#006e16",
+                      "surface-variant": "#353436",
+                      "on-background": "#e5e2e3",
+                      "error-container": "#93000a",
+                      "tertiary-fixed-dim": "#ffabf3",
+                      "on-primary-container": "#007117",
+                      "primary-fixed": "#72ff70",
+                      "on-primary-fixed": "#002203",
+                      "outline-variant": "#3b4b37",
+                      "on-surface": "#e5e2e3",
+                      "tertiary": "#fff7f9",
+                      "tertiary-fixed": "#ffd7f5"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0rem",
+                      "lg": "0rem",
+                      "xl": "0rem",
+                      "full": "0rem"
+              },
+              "spacing": {
+                      "gutter": "24px",
+                      "max_width": "1200px",
+                      "margin_lg": "64px",
+                      "margin_sm": "16px",
+                      "margin_md": "32px",
+                      "base_grid": "8px"
+              },
+              "fontFamily": {
+                      "headline-xl": ["Space Mono"],
+                      "label-sm": ["Courier Prime"],
+                      "code-block": ["JetBrains Mono"],
+                      "headline-lg": ["Space Mono"],
+                      "headline-lg-mobile": ["Space Mono"],
+                      "body-md": ["JetBrains Mono"]
+              },
+              "fontSize": {
+                      "headline-xl": ["48px", {"lineHeight": "1.2", "letterSpacing": "-1px", "fontWeight": "700"}],
+                      "label-sm": ["12px", {"lineHeight": "1.0", "fontWeight": "700"}],
+                      "code-block": ["14px", {"lineHeight": "1.5", "fontWeight": "400"}],
+                      "headline-lg": ["32px", {"lineHeight": "1.2", "fontWeight": "700"}],
+                      "headline-lg-mobile": ["24px", {"lineHeight": "1.2", "fontWeight": "700"}],
+                      "body-md": ["16px", {"lineHeight": "1.6", "fontWeight": "400"}]
+              }
+            },
+          },
+        }
+    </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+</head>
+<body class="bg-background text-on-surface font-body-md selection:bg-primary-container selection:text-on-primary-container">
+<div class="scanlines"></div>
+<!-- TopAppBar -->
+<header class="fixed top-0 left-0 w-full z-50 flex justify-between items-center px-gutter h-16 bg-surface border-b-4 border-outline-variant">
+<div class="flex items-center gap-base_grid">
+<span class="material-symbols-outlined text-primary-fixed-dim" style="font-variation-settings: 'FILL' 1;">terminal</span>
+<h1 class="font-headline-lg-mobile text-headline-lg-mobile md:font-headline-lg md:text-headline-lg text-primary-fixed-dim tracking-tighter">DEV_TERMINAL_V1.0</h1>
+</div>
+<div class="flex items-center gap-margin_sm">
+<button class="material-symbols-outlined text-on-surface-variant hover:bg-surface-container-highest hover:text-primary transition-all p-2">settings</button>
+</div>
+</header>
+<main class="pt-24 pb-32 px-gutter max-w-max_width mx-auto min-h-screen flex flex-col justify-center">
+<!-- Communication Terminal Section -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-margin_lg items-start">
+<!-- Left Panel: Status & Ambient -->
+<div class="lg:col-span-5 space-y-margin_md">
+<div class="pixel-border p-margin_sm bg-surface-container-low dither-shadow">
+<div class="flex justify-between items-center border-b-2 border-outline-variant mb-4 pb-2">
+<span class="font-headline-lg-mobile text-headline-lg-mobile text-primary-fixed-dim">SYSTEM_STATUS</span>
+<div class="flex gap-1">
+<div class="w-2 h-2 bg-primary-container"></div>
+<div class="w-2 h-2 bg-outline-variant"></div>
+<div class="w-2 h-2 bg-outline-variant"></div>
+</div>
+</div>
+<div class="space-y-4 font-code-block text-code-block text-on-surface-variant">
+<p class="flex items-center gap-2"><span class="w-2 h-2 bg-primary-container"></span> ENCRYPTION: ACTIVE</p>
+<p class="flex items-center gap-2"><span class="w-2 h-2 bg-primary-container"></span> SIGNAL STRENGTH: OPTIMAL</p>
+<p class="flex items-center gap-2"><span class="w-2 h-2 bg-primary-container"></span> LOCATION: [REDACTED]</p>
+<div class="pt-4">
+<div class="w-full bg-surface-container-highest h-6 flex items-center px-1">
+<div class="bg-primary-container h-4 w-3/4"></div>
+<div class="bg-surface-container-highest h-4 w-1/4 flex gap-1 ml-1">
+<div class="bg-outline-variant flex-1"></div>
+<div class="bg-outline-variant flex-1"></div>
+</div>
+</div>
+<p class="text-label-sm font-label-sm mt-2">BUFFER_CAPACITY: 75%</p>
+</div>
+</div>
+</div>
+<div class="relative w-full aspect-video pixel-border overflow-hidden bg-black">
+<div class="absolute inset-0 opacity-50">
+
+</div>
+<div class="absolute bottom-4 left-4 bg-surface p-2 border-2 border-primary-container text-primary-container font-code-block text-[10px]">
+                        SCANNING_FREQ... 8.44MHz
+                    </div>
+</div>
+</div>
+<!-- Right Panel: The Save Point Interface -->
+<div class="lg:col-span-7">
+<div class="pixel-border p-margin_md bg-surface dither-shadow">
+<div class="flex justify-between items-center border-b-4 border-outline-variant mb-margin_md pb-margin_sm">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary-container">save</span>
+<h2 class="font-headline-lg text-headline-lg text-on-primary-container">SAVE POINT: COMM_LINK</h2>
+</div>
+<span class="text-label-sm font-label-sm text-outline">v1.0.8-ALPHA</span>
+</div>
+<form class="space-y-margin_md" onsubmit="event.preventDefault();">
+<div class="group">
+<label class="block font-code-block text-on-surface-variant mb-2 tracking-widest">IDENTIFICATION_NAME</label>
+<div class="flex items-center bg-surface-container-low border-2 border-outline-variant p-margin_sm focus-within:border-primary-container transition-colors">
+<span class="text-primary-container mr-3 font-bold">&gt;</span>
+<input class="bg-transparent border-none text-primary-container font-code-block w-full focus:ring-0 placeholder:text-outline-variant uppercase" placeholder="ENTER_NAME..." type="text"/>
+</div>
+</div>
+<div class="group">
+<label class="block font-code-block text-on-surface-variant mb-2 tracking-widest">TRANSMISSION_ID (EMAIL)</label>
+<div class="flex items-center bg-surface-container-low border-2 border-outline-variant p-margin_sm focus-within:border-primary-container transition-colors">
+<span class="text-primary-container mr-3 font-bold">&gt;</span>
+<input class="bg-transparent border-none text-primary-container font-code-block w-full focus:ring-0 placeholder:text-outline-variant uppercase" placeholder="USER@DOMAIN.NET" type="email"/>
+</div>
+</div>
+<div class="group">
+<label class="block font-code-block text-on-surface-variant mb-2 tracking-widest">PAYLOAD_MESSAGE</label>
+<div class="flex items-start bg-surface-container-low border-2 border-outline-variant p-margin_sm focus-within:border-primary-container transition-colors">
+<span class="text-primary-container mr-3 font-bold pt-1">&gt;</span>
+<textarea class="bg-transparent border-none text-primary-container font-code-block w-full focus:ring-0 placeholder:text-outline-variant uppercase resize-none" placeholder="INITIATE_DATA_TRANSFER..." rows="5"></textarea>
+</div>
+</div>
+<div class="pt-margin_sm">
+<button class="relative group w-full bg-primary-container text-on-primary py-margin_sm font-headline-lg uppercase transition-all active:translate-x-1 active:translate-y-1">
+<span class="relative z-10 crt-glow">TRANSMIT SIGNAL</span>
+<!-- Mechanical Press Effect Ghost -->
+<div class="absolute inset-0 border-4 border-primary-container -z-10 group-active:hidden group-hover:translate-x-1 group-hover:translate-y-1 transition-transform"></div>
+</button>
+</div>
+</form>
+<div class="mt-margin_md p-margin_sm border-t-2 border-outline-variant text-label-sm font-label-sm text-outline text-center flex items-center justify-center gap-4">
+<span class="flex items-center gap-1"><span class="w-1.5 h-1.5 bg-primary-container rounded-full animate-pulse"></span> SYSTEM_READY</span>
+<span>|</span>
+<span>LATENCY: 42ms</span>
+<span>|</span>
+<span>PROTOCOL: TCP/IP_V4</span>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- BottomNavBar (Mobile Only) -->
+<nav class="md:hidden fixed bottom-0 left-0 w-full z-50 flex justify-around items-center h-20 bg-surface px-margin_sm border-t-4 border-outline-variant">
+<a class="flex flex-col items-center justify-center text-on-surface-variant p-2 hover:bg-surface-container-high hover:text-primary-fixed-dim transition-transform duration-75 active:translate-y-1" href="#">
+<span class="material-symbols-outlined">home</span>
+<span class="font-label-sm text-label-sm uppercase">START</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant p-2 hover:bg-surface-container-high hover:text-primary-fixed-dim transition-transform duration-75 active:translate-y-1" href="#">
+<span class="material-symbols-outlined">inventory</span>
+<span class="font-label-sm text-label-sm uppercase">QUESTS</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant p-2 hover:bg-surface-container-high hover:text-primary-fixed-dim transition-transform duration-75 active:translate-y-1" href="#">
+<span class="material-symbols-outlined">leaderboard</span>
+<span class="font-label-sm text-label-sm uppercase">STATS</span>
+</a>
+<a class="flex flex-col items-center justify-center bg-primary-container text-on-primary-container p-2 scale-95 transition-transform duration-75 active:translate-y-1" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">save</span>
+<span class="font-label-sm text-label-sm uppercase">SAVE</span>
+</a>
+</nav>
+<!-- Footer -->
+<footer class="w-full py-base_grid px-gutter flex flex-col md:flex-row justify-between items-center mb-20 md:mb-0 border-t-4 border-outline-variant bg-surface-container-lowest">
+<div class="flex items-center gap-margin_sm">
+<p class="font-code-block text-code-block text-on-surface-variant">©198X_ENGINEER_STATION</p>
+<span class="text-outline-variant hidden md:inline">|</span>
+<p class="font-code-block text-code-block text-on-surface-variant uppercase">ALL_RIGHTS_RESERVED</p>
+</div>
+<div class="flex gap-gutter mt-margin_sm md:mt-0">
+<a class="font-code-block text-code-block text-on-surface-variant hover:text-primary-container cursor-pointer transition-colors" href="#">SOURCE_CODE</a>
+<a class="font-code-block text-code-block text-on-surface-variant hover:text-primary-container cursor-pointer transition-colors" href="#">SYSTEM_LOGS</a>
+</div>
+</footer>
+<script>
+        // Micro-interaction for input fields
+        document.querySelectorAll('input, textarea').forEach(el => {
+            el.addEventListener('focus', () => {
+                const parent = el.closest('.flex');
+                parent.classList.add('border-primary-container');
+                parent.querySelector('.text-primary-container').classList.add('crt-glow');
+            });
+            el.addEventListener('blur', () => {
+                const parent = el.closest('.flex');
+                parent.classList.remove('border-primary-container');
+                parent.querySelector('.text-primary-container').classList.remove('crt-glow');
+            });
+        });
+
+        // Matrix-like log printing effect on load
+        window.addEventListener('DOMContentLoaded', () => {
+            console.log("INITIALIZING COMMUNICATION TERMINAL...");
+            console.log("HANDSHAKE WITH SERVER... SUCCESS");
+            console.log("READY FOR INPUT.");
+        });
+    </script>
+</body></html>

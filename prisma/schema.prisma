@@ -1,0 +1,141 @@
+datasource db {
+  provider = "sqlite"
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+// ==========================================
+// NextAuth Models (JWT Credentials Setup)
+// ==========================================
+
+model User {
+  id            String    @id @default(uuid())
+  name          String?
+  email         String?   @unique
+  emailVerified DateTime?
+  image         String?
+  password      String?   // Salted hash for admin authentication
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+}
+
+// ==========================================
+// Portfolio Content Models
+// ==========================================
+
+model Project {
+  id                 String    @id @default(uuid())
+  title              String
+  slug               String    @unique
+  description        String
+  problem            String?
+  solution           String?
+  architecture       String?
+  techStack          String    // Comma-separated list (e.g. "React,Next.js,TypeScript")
+  images             String?   // Comma-separated image paths
+  video              String?   // Video url or path
+  githubUrl          String?
+  liveUrl            String?
+  status             String    @default("DRAFT") // "DRAFT" or "PUBLISHED"
+  startDate          DateTime?
+  endDate            DateTime?
+  category           String?   // "Web", "AI", "ML", etc.
+  difficulty         Int       @default(1) // 1-5 rating
+  features           String?   // Newline-separated feature list
+  lessons            String?   // Lessons learned
+  future             String?   // Future improvements
+  createdAt          DateTime  @default(now())
+  updatedAt          DateTime  @updatedAt
+}
+
+model Skill {
+  id        String   @id @default(uuid())
+  name      String
+  category  String   // "Frontend", "Backend", "AI/ML", "DevOps", "Data Science"
+  level     Int      // 1-100 percentage
+  icon      String?  // Lucide icon name or emoji
+  index     Int      @default(0) // sorting position
+}
+
+model Experience {
+  id           String   @id @default(uuid())
+  company      String
+  role         String
+  location     String?
+  startDate    String   // e.g. "Oct 2023"
+  endDate      String   // e.g. "Present"
+  description  String   // Newline-separated or markdown bullet points
+  technologies String?  // Comma-separated technologies
+  index        Int      @default(0) // sorting position
+}
+
+model Education {
+  id           String   @id @default(uuid())
+  institution  String
+  degree       String
+  fieldOfStudy String?
+  startDate    String
+  endDate      String
+  grade        String?
+  index        Int      @default(0) // sorting position
+}
+
+model Certification {
+  id            String   @id @default(uuid())
+  name          String
+  issuer        String
+  issueDate     String
+  credentialId  String?
+  credentialUrl String?
+}
+
+model BlogPost {
+  id        String   @id @default(uuid())
+  title     String
+  slug      String   @unique
+  content   String   // Markdown content
+  summary   String
+  published Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model GameScore {
+  id            String   @id @default(uuid())
+  playerName    String   // "Guest" or custom username
+  gameName      String   // "Snake", "Minesweeper", "TicTacToe", "RPS", "Memory", "2048", "Typing"
+  score         Int
+  timeInSeconds Int      @default(0)
+  date          DateTime @default(now())
+}
+
+model ContactMessage {
+  id        String   @id @default(uuid())
+  name      String
+  email     String
+  message   String
+  ipAddress String?
+  read      Boolean  @default(false)
+  createdAt DateTime @default(now())
+}
+
+model Achievement {
+  id          String    @id @default(uuid())
+  title       String
+  description String
+  icon        String?
+  points      Int       @default(10)
+  unlocked    Boolean   @default(false)
+  unlockedAt  DateTime?
+  category    String    @default("EXPLORATION") // "ARCADE", "EXPLORATION", "TERMINAL"
+  condition   String?   // Internal identifier (e.g. "konami_code", "first_win")
+}
+
+model SocialLink {
+  id       String @id @default(uuid())
+  platform String
+  url      String
+  icon     String?
+}

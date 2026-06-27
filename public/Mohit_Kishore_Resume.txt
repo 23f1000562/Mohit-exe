@@ -1,0 +1,37 @@
+Mohit Kishore
+Full-Stack Engineer • AI/ML Builder
+
+Contact
+Email: contact@mohit.exe
+GitHub: github.com
+LinkedIn: linkedin.com
+
+Summary
+Engineering-focused product builder with experience delivering high-quality web applications, AI-enabled products, and immersive digital experiences. Comfortable across frontend, backend, and product implementation.
+
+Core Skills
+- Full-Stack Development: Next.js, React, TypeScript, Node.js
+- Backend & Data: Prisma, PostgreSQL, REST APIs, auth flows
+- AI/ML: Python, TensorFlow, PyTorch, LLM tooling
+- Product Craft: UI systems, accessibility, responsive design, performance
+- Tools: Docker, GitHub Actions, Vercel, Tailwind, Framer Motion
+
+Experience
+Senior Full-Stack Engineer — Neural Forge Labs (2023 — Present)
+- Built production-grade Next.js platforms with Prisma, PostgreSQL, and resilient API layers.
+- Developed AI-powered product experiences spanning onboarding, dashboarding, and automation workflows.
+- Improved frontend performance, accessibility, and maintainability through strong engineering standards.
+
+Lead Frontend Engineer — Retro Systems Studio (2021 — 2023)
+- Designed immersive product interfaces using React, TypeScript, and design systems.
+- Improved delivery velocity through reusable component architecture and engineering best practices.
+- Partnered with product, design, and backend teams to ship polished, measurable experiences.
+
+Education
+B.Tech in Computer Science (2018 — 2022)
+Specialized in software engineering, distributed systems, and applied AI.
+
+Selected Projects
+- MOHIT.EXE v2 — retro portfolio OS with terminal, arcade games, and dynamic content.
+- Bitwise Architect — full-stack engineering showcase with modular architecture.
+- AI Lab — interactive demos for machine learning, vision, and LLM workflows.

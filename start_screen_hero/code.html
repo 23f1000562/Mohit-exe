@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>DEV_TERMINAL_V1.0 | 198X_ENGINEER_STATION</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&amp;family=Courier+Prime:wght@400;700&amp;family=JetBrains+Mono:wght@400;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-primary-fixed-variant": "#00530e",
+                    "on-surface-variant": "#b9ccb2",
+                    "surface": "#131314",
+                    "background": "#131314",
+                    "surface-container-highest": "#353436",
+                    "primary": "#ebffe2",
+                    "secondary": "#bdf4ff",
+                    "primary-container": "#00ff41",
+                    "on-secondary-fixed-variant": "#004f58",
+                    "on-error-container": "#ffdad6",
+                    "primary-fixed-dim": "#00e639",
+                    "on-tertiary-fixed": "#380038",
+                    "surface-container-low": "#1b1b1c",
+                    "secondary-fixed": "#9cf0ff",
+                    "inverse-surface": "#e5e2e3",
+                    "on-secondary": "#00363d",
+                    "outline": "#84967e",
+                    "on-secondary-container": "#00616d",
+                    "on-secondary-fixed": "#001f24",
+                    "surface-container-lowest": "#0e0e0f",
+                    "surface-container-high": "#2a2a2b",
+                    "surface-tint": "#00e639",
+                    "surface-container": "#1f1f20",
+                    "tertiary-container": "#ffcef4",
+                    "surface-dim": "#131314",
+                    "secondary-fixed-dim": "#00daf3",
+                    "on-error": "#690005",
+                    "surface-bright": "#39393a",
+                    "on-primary": "#003907",
+                    "inverse-on-surface": "#303031",
+                    "on-tertiary": "#5b005b",
+                    "on-tertiary-container": "#ad00ad",
+                    "error": "#ffb4ab",
+                    "on-tertiary-fixed-variant": "#810081",
+                    "secondary-container": "#00e3fd",
+                    "inverse-primary": "#006e16",
+                    "surface-variant": "#353436",
+                    "on-background": "#e5e2e3",
+                    "error-container": "#93000a",
+                    "tertiary-fixed-dim": "#ffabf3",
+                    "on-primary-container": "#007117",
+                    "primary-fixed": "#72ff70",
+                    "on-primary-fixed": "#002203",
+                    "outline-variant": "#3b4b37",
+                    "on-surface": "#e5e2e3",
+                    "tertiary": "#fff7f9",
+                    "tertiary-fixed": "#ffd7f5"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0px",
+                    "lg": "0px",
+                    "xl": "0px",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "gutter": "24px",
+                    "max_width": "1200px",
+                    "margin_lg": "64px",
+                    "margin_sm": "16px",
+                    "margin_md": "32px",
+                    "base_grid": "8px"
+            },
+            "fontFamily": {
+                    "headline-xl": ["Space Mono"],
+                    "label-sm": ["Courier Prime"],
+                    "code-block": ["JetBrains Mono"],
+                    "headline-lg": ["Space Mono"],
+                    "headline-lg-mobile": ["Space Mono"],
+                    "body-md": ["JetBrains Mono"]
+            },
+            "fontSize": {
+                    "headline-xl": ["48px", {"lineHeight": "1.2", "letterSpacing": "-1px", "fontWeight": "700"}],
+                    "label-sm": ["12px", {"lineHeight": "1.0", "fontWeight": "700"}],
+                    "code-block": ["14px", {"lineHeight": "1.5", "fontWeight": "400"}],
+                    "headline-lg": ["32px", {"lineHeight": "1.2", "fontWeight": "700"}],
+                    "headline-lg-mobile": ["24px", {"lineHeight": "1.2", "fontWeight": "700"}],
+                    "body-md": ["16px", {"lineHeight": "1.6", "fontWeight": "400"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body {
+            background-color: #0e0e0f;
+            background-image: radial-gradient(#1f1f20 1px, transparent 1px);
+            background-size: 16px 16px;
+            overflow-x: hidden;
+        }
+
+        .scanlines {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.1) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.03), rgba(0, 255, 0, 0.01), rgba(0, 0, 118, 0.03));
+            background-size: 100% 4px, 3px 100%;
+            pointer-events: none;
+            z-index: 100;
+        }
+
+        .dither-bg {
+            background-image: 
+                radial-gradient(circle, transparent 20%, #0e0e0f 20%, #0e0e0f 80%, transparent 80%, transparent),
+                radial-gradient(circle, transparent 20%, #0e0e0f 20%, #0e0e0f 80%, transparent 80%, transparent);
+            background-size: 8px 8px;
+            background-position: 0 0, 4px 4px;
+            opacity: 0.2;
+        }
+
+        .pixel-border {
+            box-shadow: 
+                0 -4px 0 0 #4A4A4A,
+                0 4px 0 0 #4A4A4A,
+                -4px 0 0 0 #4A4A4A,
+                4px 0 0 0 #4A4A4A;
+        }
+
+        .chunky-button {
+            position: relative;
+            transition: all 0.075s steps(2);
+        }
+        .chunky-button:active {
+            transform: translate(4px, 4px);
+        }
+        .chunky-button::after {
+            content: '';
+            position: absolute;
+            top: 4px; left: 4px;
+            width: 100%; height: 100%;
+            border: 2px solid #00ff41;
+            z-index: -1;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+        .cursor-blink {
+            animation: blink 0.8s infinite steps(1);
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-8px); }
+        }
+        .float-anim {
+            animation: float 3s ease-in-out infinite;
+        }
+
+        .neon-glow {
+            text-shadow: 0 0 8px #00ff41;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="dark font-body-md text-on-surface">
+<div class="scanlines"></div>
+<!-- Top Navigation Shell -->
+<nav class="fixed top-0 left-0 w-full z-50 flex justify-between items-center px-gutter h-16 bg-surface border-b-4 border-outline-variant">
+<div class="flex items-center gap-base_grid">
+<span class="material-symbols-outlined text-primary-fixed-dim" style="font-variation-settings: 'FILL' 1;">terminal</span>
+<h1 class="font-headline-lg-mobile md:font-headline-lg text-headline-lg-mobile md:text-headline-lg text-primary-container tracking-tighter">DEV_TERMINAL_V1.0</h1>
+</div>
+<div class="hidden md:flex items-center gap-margin_md h-full">
+<a class="h-full flex items-center px-4 font-label-sm text-label-sm text-primary-container border-b-2 border-primary-container" href="#">START</a>
+<a class="h-full flex items-center px-4 font-label-sm text-label-sm text-on-surface-variant hover:bg-surface-container-highest hover:text-primary transition-all" href="#">QUESTS</a>
+<a class="h-full flex items-center px-4 font-label-sm text-label-sm text-on-surface-variant hover:bg-surface-container-highest hover:text-primary transition-all" href="#">STATS</a>
+</div>
+<div class="flex items-center">
+<span class="material-symbols-outlined text-on-surface-variant cursor-pointer hover:text-primary-fixed-dim">settings</span>
+</div>
+</nav>
+<!-- Main Hero Canvas -->
+<main class="relative min-h-screen flex flex-col items-center justify-center pt-24 pb-32 px-margin_sm overflow-hidden">
+<!-- Background Decor -->
+<div class="absolute inset-0 dither-bg -z-10"></div>
+<!-- 8-Bit Character Section -->
+<div class="relative mb-margin_lg float-anim">
+<!-- Terminal Desk Concept -->
+<div class="relative z-10 p-4 border-4 border-outline-variant bg-surface-container-low w-64 h-64 md:w-80 md:h-80 flex flex-col items-center justify-center">
+<div class="absolute -top-4 -left-4 w-8 h-8 bg-primary-container border-4 border-outline-variant"></div>
+<div class="absolute -top-4 -right-4 w-8 h-8 bg-primary-container border-4 border-outline-variant"></div>
+<img class="w-full h-full object-contain image-pixelated" data-alt="A detailed pixel-art illustration of a character sitting at a glowing green terminal. The character is a retro-style web developer with glasses and a tech hoodie, rendered in a crisp 8-bit style with a limited color palette of neon greens, deep blacks, and grays. High-contrast lighting from the monitor reflects on their face, creating a nostalgic early computing atmosphere. The visual style is strictly grid-aligned and pixel-perfect." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBbiN4HhkAxSA7YX764Yys_eGIvb_FlUiBxIOry12QfNlONciGl9xECO-BOV6Sy6jdHw99_rhp6rnlmGhbslMaZPORuhOxOu3AYlPItA9I9r_Nddb0CN3XIpDGe9lAfpYimEnEFN4aaiGWVf5rKkacfCkWUxloKIZfot9JBZNGBjLnIqWy7aqLSE86SKh_4hXG25p1KFGzBCd7VIySJ1CvTJEHxmAEi_TjeLBLnq53O6qdEGQNEe7bN1D3slho0BAa3IUvYQ1eLNDQ"/>
+<div class="absolute bottom-2 left-2 right-2 h-1 bg-primary-container opacity-50 blur-sm"></div>
+</div>
+<!-- Dithered Drop Shadow -->
+<div class="absolute top-8 left-8 w-64 h-64 md:w-80 md:h-80 bg-[radial-gradient(#000_1px,transparent_1px)] bg-[length:4px_4px] -z-10 opacity-60"></div>
+</div>
+<!-- Title Block -->
+<div class="text-center z-20 max-w-4xl">
+<div class="mb-base_grid inline-block px-4 py-1 border-2 border-primary-container bg-on-primary-fixed-variant">
+<p class="font-label-sm text-label-sm text-primary uppercase tracking-widest">LEVEL 99 ARCHITECT</p>
+</div>
+<h2 class="font-headline-xl text-headline-xl text-primary-container neon-glow mb-4 tracking-tighter leading-none">
+                PLAYER 1: WEB DEV <br class="hidden md:block"/> &amp; AI ENGINEER
+            </h2>
+<p class="font-code-block text-code-block text-on-surface-variant mb-margin_lg flex items-center justify-center gap-2">
+<span class="text-primary-container">&gt;</span> 
+                PRESS START TO BEGIN YOUR JOURNEY
+                <span class="w-3 h-6 bg-primary-container cursor-blink"></span>
+</p>
+<!-- CTA -->
+<div class="flex flex-col md:flex-row items-center justify-center gap-margin_md">
+<button class="chunky-button bg-primary-container text-on-primary font-headline-lg-mobile text-headline-lg-mobile px-12 py-4 border-b-4 border-r-4 border-on-primary-fixed-variant active:translate-x-1 active:translate-y-1 transition-all">
+                    START GAME
+                </button>
+<button class="font-label-sm text-label-sm text-on-surface-variant border-4 border-outline-variant px-8 py-4 hover:bg-surface-container-highest hover:text-primary transition-all">
+                    LOAD SAVED_LOGS
+                </button>
+</div>
+</div>
+<!-- UI Elements: Inventory / HUD Style -->
+<div class="absolute bottom-32 md:left-gutter hidden lg:flex flex-col gap-4 border-l-4 border-outline-variant pl-4">
+<div class="flex items-center gap-3">
+<span class="text-on-surface-variant text-xs font-label-sm">STR:</span>
+<div class="flex gap-1">
+<div class="w-3 h-3 bg-primary-container"></div>
+<div class="w-3 h-3 bg-primary-container"></div>
+<div class="w-3 h-3 bg-primary-container"></div>
+<div class="w-3 h-3 bg-primary-container"></div>
+<div class="w-3 h-3 bg-surface-container-highest"></div>
+</div>
+</div>
+<div class="flex items-center gap-3">
+<span class="text-on-surface-variant text-xs font-label-sm">INT:</span>
+<div class="flex gap-1">
+<div class="w-3 h-3 bg-primary-container"></div>
+<div class="w-3 h-3 bg-primary-container"></div>
+<div class="w-3 h-3 bg-primary-container"></div>
+<div class="w-3 h-3 bg-primary-container"></div>
+<div class="w-3 h-3 bg-primary-container"></div>
+</div>
+</div>
+</div>
+<div class="absolute bottom-32 md:right-gutter hidden lg:block text-right border-r-4 border-outline-variant pr-4">
+<p class="font-label-sm text-label-sm text-on-surface-variant mb-2">QUICK_STACK</p>
+<div class="flex flex-wrap justify-end gap-2 max-w-[200px]">
+<span class="border border-outline px-2 py-1 text-[10px] text-primary">NEXT.JS</span>
+<span class="border border-outline px-2 py-1 text-[10px] text-primary">PYTORCH</span>
+<span class="border border-outline px-2 py-1 text-[10px] text-primary">TYPESCRIPT</span>
+<span class="border border-outline px-2 py-1 text-[10px] text-primary">TAILWIND</span>
+</div>
+</div>
+</main>
+<!-- Footer Shell -->
+<footer class="w-full py-base_grid px-gutter flex flex-col md:flex-row justify-between items-center mb-20 md:mb-0 border-t-4 border-outline-variant bg-surface-container-lowest">
+<p class="font-code-block text-code-block text-on-surface-variant">©198X_ENGINEER_STATION</p>
+<div class="flex gap-margin_md">
+<a class="font-code-block text-code-block text-on-surface-variant hover:text-primary-container cursor-pointer transition-colors" href="#">SOURCE_CODE</a>
+<a class="font-code-block text-code-block text-on-surface-variant hover:text-primary-container cursor-pointer transition-colors" href="#">SYSTEM_LOGS</a>
+</div>
+</footer>
+<!-- Mobile Navigation Shell -->
+<div class="md:hidden fixed bottom-0 left-0 w-full z-50 flex justify-around items-center h-20 bg-surface px-margin_sm border-t-4 border-outline-variant">
+<div class="flex flex-col items-center justify-center bg-primary-container text-on-primary-container p-2 scale-95 transition-transform duration-75">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">home</span>
+<span class="font-label-sm text-label-sm">START</span>
+</div>
+<div class="flex flex-col items-center justify-center text-on-surface-variant p-2 hover:bg-surface-container-high hover:text-primary-fixed-dim transition-all active:translate-y-1">
+<span class="material-symbols-outlined">inventory</span>
+<span class="font-label-sm text-label-sm">QUESTS</span>
+</div>
+<div class="flex flex-col items-center justify-center text-on-surface-variant p-2 hover:bg-surface-container-high hover:text-primary-fixed-dim transition-all active:translate-y-1">
+<span class="material-symbols-outlined">leaderboard</span>
+<span class="font-label-sm text-label-sm">STATS</span>
+</div>
+<div class="flex flex-col items-center justify-center text-on-surface-variant p-2 hover:bg-surface-container-high hover:text-primary-fixed-dim transition-all active:translate-y-1">
+<span class="material-symbols-outlined">save</span>
+<span class="font-label-sm text-label-sm">SAVE</span>
+</div>
+</div>
+<script>
+        // Simple micro-interaction for the terminal character
+        document.addEventListener('mousemove', (e) => {
+            const charContainer = document.querySelector('.float-anim');
+            if (charContainer) {
+                const moveX = (e.clientX - window.innerWidth / 2) / 50;
+                const moveY = (e.clientY - window.innerHeight / 2) / 50;
+                charContainer.style.transform = `translate(${moveX}px, ${moveY}px)`;
+            }
+        });
+        
+        // Sound-like feedback on click (Visual only)
+        const buttons = document.querySelectorAll('.chunky-button');
+        buttons.forEach(btn => {
+            btn.addEventListener('click', () => {
+                btn.style.backgroundColor = '#ffffff';
+                setTimeout(() => {
+                    btn.style.backgroundColor = '#00ff41';
+                }, 50);
+            });
+        });
+    </script>
+</body></html>
