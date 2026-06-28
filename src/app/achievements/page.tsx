@@ -1,16 +1,12 @@
 import Link from "next/link";
+import { prisma } from "@/lib/db";
 import CRTContainer from "@/components/CRTContainer";
 import { ArrowLeft, Trophy, Sparkles } from "lucide-react";
 
-async function getAchievements() {
-  const res = await fetch("http://localhost:3000/api/achievements", { cache: "no-store" });
-  if (!res.ok) return [];
-  const data = await res.json();
-  return data.achievements || [];
-}
+export const revalidate = 0;
 
 export default async function AchievementsPage() {
-  const achievements = await getAchievements();
+  const achievements = await prisma.achievement.findMany();
 
   return (
     <CRTContainer>
