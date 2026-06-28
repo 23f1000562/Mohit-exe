@@ -18,8 +18,25 @@ export default async function CharacterPage() {
     orderBy: { index: "asc" },
   });
 
-  const avatarUrl =
-    "https://lh3.googleusercontent.com/aida-public/AB6AXuCjclm6KHG-zliv9hBAFpimaR9B1hizp1lOJ22VpnAcXQCth8rgQ0bIuNGV9HLRDVbRwKJHHxXqCTxDkvNpQUhWdyH63cisyJhSAXfcSQoZqFFJWT69Lr7I__z0xzFyZ13yPTMgWjKFPLR2dNOow7iQ9D8mkm90KturnzuIoM4_ZkjGvIrJzu32ZC58xhYFCqOG-3vIDkS_wcDOdIsDoCX10WKT_tTPnAKKSuIcE0V_sT5eD1xBa5GYC152m_LgxbzfNrAQqYQj_1s";
+  const defaultAvatar = "/avatar.png";
+  let avatarUrl = defaultAvatar;
+
+  try {
+    const settings = (await prisma.$queryRaw`
+      SELECT key, value
+      FROM Setting
+      WHERE key = 'avatarDataUrl'
+    `) as Array<{ key: string; value: string }>;
+
+    const dataSetting = settings.find((setting) => setting.key === "avatarDataUrl");
+    const cleanedValue = dataSetting?.value?.trim();
+
+    if (cleanedValue) {
+      avatarUrl = cleanedValue;
+    }
+  } catch (_error) {
+    // If settings access fails, keep the local fallback avatar.
+  }
 
   return (
     <CRTContainer>
@@ -52,7 +69,7 @@ export default async function CharacterPage() {
               <div className="mt-6 w-full space-y-4">
                 <div className="flex justify-between border-b-2 border-outline-variant pb-2">
                   <span className="font-label text-xs text-on-surface-variant">NAME:</span>
-                  <span className="font-headline text-lg text-primary crt-glow">S_ENGINEER</span>
+                  <span className="font-headline text-lg text-primary crt-glow">MOHIT KISHORE</span>
                 </div>
                 <div className="flex justify-between border-b-2 border-outline-variant pb-2">
                   <span className="font-label text-xs text-on-surface-variant">CLASS:</span>
@@ -73,37 +90,47 @@ export default async function CharacterPage() {
 
         {/* Right Side: Stats & Bio Panel */}
         <section className="lg:col-span-8 flex flex-col gap-6">
-          {/* Skill Levels Card */}
+          {/* Skill Levels Card - All 27 Skills Organized by Category */}
           <div className="bg-surface border-4 border-outline-variant dither-shadow">
             <div className="bg-outline-variant px-4 py-2 flex justify-between items-center">
               <span className="font-label text-xs text-surface font-bold">SKILL_MATRICES</span>
-              <span className="font-label text-xs text-surface font-bold">TYPE: ACTIVE</span>
+              <span className="font-label text-xs text-surface font-bold">TYPE: ACTIVE ({skills.length})</span>
             </div>
             
-            <div className="p-6 space-y-6">
-              {skills.slice(0, 4).map((s) => {
-                const filledBlocks = Math.round(s.level / 10);
-                return (
-                  <div key={s.id}>
-                    <div className="flex justify-between mb-2">
-                      <span className="font-label text-sm text-primary font-bold uppercase">{s.name}</span>
-                      <span className="font-label text-xs text-primary-dim font-bold">LVL {s.level}</span>
-                    </div>
-                    <div className="flex w-full overflow-hidden">
-                      {Array.from({ length: 10 }).map((_, i) => (
-                        <div
-                          key={i}
-                          className={`h-5 w-8 mr-1 border ${
-                            i < filledBlocks
-                              ? "bg-primary border-primary shadow-[0_0_5px_#00ff41]"
-                              : "border-outline-variant"
-                          }`}
-                        />
-                      ))}
-                    </div>
+            <div className="p-6 space-y-8 max-h-[600px] overflow-y-auto">
+              {/* Group skills by category */}
+              {Array.from(new Set(skills.map(s => s.category))).map(category => (
+                <div key={category}>
+                  <div className="text-xs font-label text-secondary mb-3 border-b border-outline-variant pb-2 uppercase font-bold">
+                    ▶ {category}
                   </div>
-                );
-              })}
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pl-4">
+                    {skills.filter(s => s.category === category).map((s) => {
+                      const filledBlocks = Math.round(s.level / 10);
+                      return (
+                        <div key={s.id} className="text-xs">
+                          <div className="flex justify-between mb-1">
+                            <span className="font-label text-primary font-bold">{s.name}</span>
+                            <span className="font-label text-primary-dim text-xs">LVL {s.level}</span>
+                          </div>
+                          <div className="flex gap-0.5">
+                            {Array.from({ length: 10 }).map((_, i) => (
+                              <div
+                                key={i}
+                                className={`h-3 w-3 border ${
+                                  i < filledBlocks
+                                    ? "bg-primary border-primary shadow-[0_0_3px_#00ff41]"
+                                    : "border-outline-variant"
+                                }`}
+                              />
+                            ))}
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
 

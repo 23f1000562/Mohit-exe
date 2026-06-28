@@ -108,7 +108,7 @@ export default function ProjectsListClient({ projects }: ProjectsListClientProps
               {/* Card Header */}
               <div className="bg-outline-variant px-4 py-1.5 flex justify-between items-center select-none">
                 <span className="font-label text-[10px] text-surface font-bold">
-                  QUEST_0{idx + 1} // LVL_{p.difficulty * 10}
+                  QUEST_0{idx + 1} / LVL_{p.difficulty * 10}
                 </span>
                 <div className="flex gap-1">
                   <div className="w-2.5 h-2.5 bg-primary"></div>

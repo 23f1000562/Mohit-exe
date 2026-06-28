@@ -26,10 +26,6 @@ export default function MemoryMatchGame() {
   const playClick = () => soundHelper?.playClick();
   const playSuccess = () => soundHelper?.playSuccess();
 
-  useEffect(() => {
-    initializeCards();
-  }, []);
-
   const initializeCards = () => {
     // 16 cards (8 pairs)
     const cardData: string[] = [...techIcons, ...techIcons];
@@ -51,6 +47,10 @@ export default function MemoryMatchGame() {
     setMoves(0);
     setGameOver(false);
   };
+
+  useEffect(() => {
+    initializeCards();
+  }, []);
 
   const handleCardClick = (index: number) => {
     if (cards[index].isFlipped || cards[index].isMatched || flippedIndices.length >= 2) return;

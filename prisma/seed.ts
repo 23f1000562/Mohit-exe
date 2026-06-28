@@ -24,6 +24,13 @@ async function main() {
     },
   });
 
+  await prisma.setting.create({
+    data: {
+      key: "avatarDataUrl",
+      value: "",
+    },
+  });
+
   // 3. Create Skills (from resume)
   const skillsData = [
     // Programming Languages

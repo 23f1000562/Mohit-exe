@@ -32,11 +32,6 @@ export default function MinesweeperGame() {
   const playClick = () => soundHelper?.playClick();
   const playKey = () => soundHelper?.playKey();
 
-  useEffect(() => {
-    resetGrid();
-    return () => stopTimer();
-  }, []);
-
   const startTimer = () => {
     stopTimer();
     timerIntervalRef.current = setInterval(() => {
@@ -102,6 +97,11 @@ export default function MinesweeperGame() {
 
     setGrid(newGrid);
   };
+
+  useEffect(() => {
+    resetGrid();
+    return () => stopTimer();
+  }, []);
 
   const handleCellClick = (row: number, col: number) => {
     if (gameOver || win || grid[row][col].isRevealed || grid[row][col].isFlagged) return;

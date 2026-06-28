@@ -21,6 +21,14 @@ model User {
   updatedAt     DateTime  @updatedAt
 }
 
+model Setting {
+  id        String   @id @default(uuid())
+  key       String   @unique
+  value     String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
 // ==========================================
 // Portfolio Content Models
 // ==========================================

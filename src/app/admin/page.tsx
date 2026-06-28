@@ -11,7 +11,9 @@ export default function AdminPage() {
   const [password, setPassword] = useState("");
   const [loginError, setLoginError] = useState("");
 
-  const [activeTab, setActiveTab] = useState<"projects" | "resume" | "messages">("projects");
+  const [activeTab, setActiveTab] = useState<"projects" | "resume" | "messages" | "settings">("projects");
+  const [avatarDataUrl, setAvatarDataUrl] = useState("");
+  const [settingsStatus, setSettingsStatus] = useState("");
 
   // Database CRUD States
   const [projects, setProjects] = useState<any[]>([]);
@@ -46,13 +48,25 @@ export default function AdminPage() {
 
   const fetchAdminData = async () => {
     try {
-      const resProj = await fetch("/api/projects");
+      const [resProj, resMsg, resSettings] = await Promise.all([
+        fetch("/api/projects"),
+        fetch("/api/contact"),
+        fetch("/api/settings"),
+      ]);
+
       const dataProj = await resProj.json();
       setProjects(dataProj.projects || []);
 
-      const resMsg = await fetch("/api/contact");
       const dataMsg = await resMsg.json();
       setMessages(dataMsg.messages || []);
+
+      const dataSettings = await resSettings.json();
+      const avatarSetting = Array.isArray(dataSettings.settings)
+        ? dataSettings.settings.find((item: any) => item.key === "avatarDataUrl")
+        : null;
+      if (avatarSetting?.value) {
+        setAvatarDataUrl(avatarSetting.value);
+      }
     } catch (_) {}
   };
 
@@ -61,7 +75,7 @@ export default function AdminPage() {
     playClick();
 
     // Verify seeded credentials
-    if (email === "mohitkishore145@gmail.com" && password === "admin123") {
+    if (email === "mohitkishore145@gmail.com" && password === "Mohit@112233") {
       setIsLoggedIn(true);
       setLoginError("");
       playSuccess();
@@ -169,6 +183,50 @@ export default function AdminPage() {
     }
   };
 
+  const handleSaveAvatar = async () => {
+    if (!avatarDataUrl.trim()) {
+      setSettingsStatus("ERROR: AVATAR_IMAGE_EMPTY");
+      soundHelper?.playError();
+      return;
+    }
+
+    playClick();
+    setSettingsStatus("UPDATING_AVATAR...");
+
+    try {
+      const res = await fetch("/api/settings", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ key: "avatarDataUrl", value: avatarDataUrl.trim() }),
+      });
+
+      if (res.ok) {
+        setSettingsStatus("AVATAR_UPDATED_SUCCESSFULLY");
+        playSuccess();
+        fetchAdminData();
+      } else {
+        setSettingsStatus("ERROR_UPDATING_AVATAR");
+        soundHelper?.playError();
+      }
+    } catch (_) {
+      setSettingsStatus("ERROR_UPDATING_AVATAR");
+      soundHelper?.playError();
+    }
+  };
+
+  const handleAvatarFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = () => {
+      if (typeof reader.result === "string") {
+        setAvatarDataUrl(reader.result);
+      }
+    };
+    reader.readAsDataURL(file);
+  };
+
   // Login View
   if (!isLoggedIn) {
     return (
@@ -264,6 +322,15 @@ export default function AdminPage() {
               >
                 <FileJson className="w-4 h-4" />
                 <span>INGEST_RESUME_JSON</span>
+              </button>
+              <button
+                onClick={() => { setActiveTab("settings"); playClick(); }}
+                className={`w-full text-left p-3 border-2 flex items-center gap-2 cursor-pointer ${
+                  activeTab === "settings" ? "bg-primary text-on-primary border-primary" : "border-outline-variant text-on-surface-variant hover:bg-surface-container"
+                }`}
+              >
+                <Cpu className="w-4 h-4" />
+                <span>SYSTEM_SETTINGS</span>
               </button>
               <button
                 onClick={() => { setActiveTab("messages"); playClick(); }}
@@ -478,6 +545,52 @@ export default function AdminPage() {
                 {ingestStatus && (
                   <p className="text-center font-bold text-xs text-secondary border border-outline-variant/30 p-2 bg-surface/50 select-none">
                     {ingestStatus}
+                  </p>
+                )}
+              </div>
+            </div>
+          )}
+
+          {activeTab === "settings" && (
+            <div className="space-y-6">
+              <div className="border-b-2 border-outline-variant pb-2 select-none">
+                <h2 className="font-headline text-lg text-primary font-bold">SYSTEM_SETTINGS</h2>
+                <p className="font-body text-xs text-on-surface-variant mt-1">
+                  Update global portfolio settings like the character avatar image.
+                </p>
+              </div>
+
+              <div className="space-y-4 font-mono text-xs">
+                <div className="space-y-1">
+                  <label className="text-on-surface-variant font-bold block select-none">CHAR_SHEET_AVATAR_IMAGE:</label>
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={handleAvatarFileChange}
+                    className="w-full bg-surface-container border-2 border-outline-variant text-primary p-2 focus:outline-none font-mono text-xs"
+                  />
+                </div>
+
+                {avatarDataUrl && (
+                  <div className="border border-outline-variant p-3 bg-surface-container-low">
+                    <p className="font-bold text-[10px] text-secondary uppercase mb-2">PREVIEW</p>
+                    <div className="w-full h-48 bg-black overflow-hidden">
+                      <img src={avatarDataUrl} alt="Avatar preview" className="w-full h-full object-cover" />
+                    </div>
+                  </div>
+                )}
+
+                <button
+                  onClick={handleSaveAvatar}
+                  className="chunky-button-primary w-full py-2.5 flex items-center justify-center gap-2 select-none"
+                >
+                  <Check className="w-4 h-4 fill-on-primary" />
+                  <span>SAVE_AVATAR_IMAGE</span>
+                </button>
+
+                {settingsStatus && (
+                  <p className="text-center font-bold text-xs text-secondary border border-outline-variant/30 p-2 bg-surface/50 select-none">
+                    {settingsStatus}
                   </p>
                 )}
               </div>

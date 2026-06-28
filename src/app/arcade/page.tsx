@@ -11,14 +11,20 @@ import RockPaperScissorsGame from "@/components/games/RockPaperScissors";
 import MemoryMatchGame from "@/components/games/MemoryMatch";
 import Game2048 from "@/components/games/Game2048";
 import TypingSpeedChallenge from "@/components/games/TypingSpeed";
-import { Gamepad2, Trophy, Award, User, RefreshCw, Flame } from "lucide-react";
+import { Trophy, Award, User, RefreshCw, Flame } from "lucide-react";
 
 type GameId = "snake" | "minesweeper" | "tictactoe" | "rps" | "memory" | "2048" | "typing";
 
+type LeaderboardEntry = {
+  id: string;
+  playerName: string;
+  score: number;
+};
+
 export default function ArcadePage() {
-  const { playerName, setPlayerName, stats, unlockedAchievements, activeGame, playGame } = useArcadeStore();
+  const { playerName, setPlayerName, stats, unlockedAchievements } = useArcadeStore();
   const [selectedGame, setSelectedGame] = useState<GameId>("snake");
-  const [leaderboard, setLeaderboard] = useState<any[]>([]);
+  const [leaderboard, setLeaderboard] = useState<LeaderboardEntry[]>([]);
   const [loadingLb, setLoadingLb] = useState(false);
   const [nameInput, setNameInput] = useState(playerName);
 
@@ -35,10 +41,6 @@ export default function ArcadePage() {
     { id: "typing", name: "TYPE_SPEED", desc: "Programming keywords speed test.", icon: "⌨️" },
   ];
 
-  useEffect(() => {
-    fetchLeaderboard();
-  }, [selectedGame]);
-
   const fetchLeaderboard = async () => {
     setLoadingLb(true);
     try {
@@ -50,6 +52,10 @@ export default function ArcadePage() {
     } catch (_) {}
     setLoadingLb(false);
   };
+
+  useEffect(() => {
+    fetchLeaderboard();
+  }, [selectedGame]);
 
   const handleNameSave = () => {
     if (nameInput.trim()) {

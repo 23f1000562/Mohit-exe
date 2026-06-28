@@ -14,10 +14,6 @@ export default function Game2048() {
   const playClick = () => soundHelper?.playClick();
   const playKey = () => soundHelper?.playKey();
 
-  useEffect(() => {
-    resetGame();
-  }, []);
-
   const resetGame = () => {
     let newBoard = Array(4).fill(null).map(() => Array(4).fill(0));
     newBoard = addRandomTile(newBoard);
@@ -27,6 +23,10 @@ export default function Game2048() {
     setGameOver(false);
     setStarted(false);
   };
+
+  useEffect(() => {
+    resetGame();
+  }, []);
 
   const addRandomTile = (currentBoard: number[][]): number[][] => {
     const emptyCells: { r: number; c: number }[] = [];
@@ -129,17 +129,17 @@ export default function Game2048() {
 
   const slideUp = (currentBoard: number[][]): [number[][], number, boolean] => {
     // Transpose
-    let transposed = Array(4).fill(null).map((_, c) => Array(4).fill(null).map((_, r) => currentBoard[r][c]));
-    let [slid, gainedScore, moved] = slideLeft(transposed);
+    const transposed = Array(4).fill(null).map((_, c) => Array(4).fill(null).map((_, r) => currentBoard[r][c]));
+    const [slid, gainedScore, moved] = slideLeft(transposed);
     // Transpose back
-    let result = Array(4).fill(null).map((_, r) => Array(4).fill(null).map((_, c) => slid[c][r]));
+    const result = Array(4).fill(null).map((_, r) => Array(4).fill(null).map((_, c) => slid[c][r]));
     return [result, gainedScore, moved];
   };
 
   const slideDown = (currentBoard: number[][]): [number[][], number, boolean] => {
-    let transposed = Array(4).fill(null).map((_, c) => Array(4).fill(null).map((_, r) => currentBoard[r][c]));
-    let [slid, gainedScore, moved] = slideRight(transposed);
-    let result = Array(4).fill(null).map((_, r) => Array(4).fill(null).map((_, c) => slid[c][r]));
+    const transposed = Array(4).fill(null).map((_, c) => Array(4).fill(null).map((_, r) => currentBoard[r][c]));
+    const [slid, gainedScore, moved] = slideRight(transposed);
+    const result = Array(4).fill(null).map((_, r) => Array(4).fill(null).map((_, c) => slid[c][r]));
     return [result, gainedScore, moved];
   };
 

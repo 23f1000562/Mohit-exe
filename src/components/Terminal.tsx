@@ -7,7 +7,7 @@ import { useRouter } from "next/navigation";
 
 export default function TerminalComponent() {
   const router = useRouter();
-  const { history, addHistoryLine, clearHistory, theme, setTheme } = useTerminalStore();
+  const { history, addHistoryLine, clearHistory, setTheme } = useTerminalStore();
   const [inputValue, setInputValue] = useState("");
   const [commandHistory, setCommandHistory] = useState<string[]>([]);
   const [historyIndex, setHistoryIndex] = useState(-1);
@@ -92,7 +92,7 @@ export default function TerminalComponent() {
         addHistoryLine({ text: "--- ACTIVE SKILL MATRICES ---", type: "success" });
         try {
           const res = await fetch("/api/skills");
-          const skills = await res.json();
+          const skills = (await res.json()) as Array<{ name: string; level: number }>;
           if (Array.isArray(skills)) {
             skills.forEach((s) => {
               const blocks = Math.round(s.level / 10);
@@ -111,10 +111,10 @@ export default function TerminalComponent() {
         addHistoryLine({ text: "--- NEURAL STORAGE: PROJECTS ---", type: "success" });
         try {
           const res = await fetch("/api/projects");
-          const data = await res.json();
+          const data = (await res.json()) as { projects?: Array<{ title: string; category: string; description: string; slug: string }> };
           const list = data.projects || [];
           if (list.length > 0) {
-            list.forEach((p: any) => {
+            list.forEach((p) => {
               addHistoryLine({ text: `* ${p.title} (${p.category}) - ${p.description}`, type: "info" });
               addHistoryLine({ text: `  Link: /projects/${p.slug}`, type: "success" });
             });

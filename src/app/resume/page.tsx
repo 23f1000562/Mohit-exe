@@ -2,29 +2,6 @@ import Link from "next/link";
 import CRTContainer from "@/components/CRTContainer";
 import { ArrowLeft, Download, FileText, Sparkles, Terminal } from "lucide-react";
 
-const experience = [
-  {
-    role: "Senior Full-Stack Engineer",
-    company: "Neural Forge Labs",
-    period: "2023 — Present",
-    points: [
-      "Architected production-grade Next.js platforms with Prisma, PostgreSQL, and resilient API layers.",
-      "Built AI-powered product experiences spanning onboarding, dashboarding, and automation workflows.",
-      "Led frontend performance and accessibility improvements with a strong focus on engineering quality.",
-    ],
-  },
-  {
-    role: "Lead Frontend Engineer",
-    company: "Retro Systems Studio",
-    period: "2021 — 2023",
-    points: [
-      "Designed immersive product interfaces with React, TypeScript, and design systems.",
-      "Improved delivery velocity through reusable component architecture and engineering standards.",
-      "Collaborated across product, design, and backend teams to ship polished, measurable experiences.",
-    ],
-  },
-];
-
 const highlights = [
   "Full-Stack Development: Next.js, React, TypeScript, Node.js",
   "Backend & Data: Prisma, PostgreSQL, REST APIs, auth flows",
@@ -34,8 +11,8 @@ const highlights = [
 ];
 
 const education = [
-  "B.Tech in Computer Science — 2018–2022",
-  "Specialized in software engineering, distributed systems, and applied AI",
+  "BS in Data Science — Indian Institute of Technology Madras",
+  "Currently pursuing the degree and continuing to build applied AI and full-stack engineering expertise",
 ];
 
 export default function ResumePage() {
@@ -45,8 +22,8 @@ export default function ResumePage() {
         <span>[SYS] OPENING_CV_DOSSIER: /RESUME/MOHIT_KISHORE.TXT ... OK</span>
         <div className="flex items-center gap-2">
           <a
-            href="/Mohit_Kishore_Resume.txt"
-            download
+            href="/Mohit_Kishore_Resume.pdf"
+            download="Mohit_Kishore_Resume.pdf"
             className="chunky-button flex items-center gap-2 px-3 py-2"
           >
             <Download className="w-4 h-4" />
@@ -69,7 +46,7 @@ export default function ResumePage() {
               </p>
             </div>
             <div className="rounded border border-outline-variant bg-surface-container p-3 font-mono text-xs text-on-surface-variant">
-              <p className="flex items-center gap-2"><Terminal className="w-4 h-4 text-primary" /> contact@mohit.exe</p>
+              <p className="flex items-center gap-2"><Terminal className="w-4 h-4 text-primary" /> Mohitkishore145@gmail.com</p>
               <p className="mt-2 flex items-center gap-2"><FileText className="w-4 h-4 text-secondary" /> github.com / linkedin.com</p>
             </div>
           </div>
@@ -101,34 +78,6 @@ export default function ResumePage() {
             </ul>
           </section>
         </div>
-
-        <section className="space-y-4">
-          <div className="flex items-center gap-2">
-            <Sparkles className="w-4 h-4 text-primary" />
-            <h2 className="font-headline text-xl text-secondary">EXPERIENCE</h2>
-          </div>
-          <div className="space-y-4">
-            {experience.map((job) => (
-              <div key={job.role} className="rounded border border-outline-variant/60 bg-surface-container-low p-4">
-                <div className="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
-                  <div>
-                    <h3 className="font-headline text-lg text-primary">{job.role}</h3>
-                    <p className="font-label text-xs uppercase text-on-surface-variant">{job.company}</p>
-                  </div>
-                  <span className="font-mono text-[10px] uppercase text-secondary">{job.period}</span>
-                </div>
-                <ul className="mt-3 space-y-2 font-body text-sm text-on-surface-variant">
-                  {job.points.map((point) => (
-                    <li key={point} className="flex items-start gap-2">
-                      <span className="text-primary">•</span>
-                      <span>{point}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            ))}
-          </div>
-        </section>
 
         <div className="grid gap-6 lg:grid-cols-2">
           <section className="space-y-3">
